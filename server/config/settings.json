@@ -1,0 +1,19 @@
+{
+    "server":
+    {
+    "server_host": "0.0.0.0",
+    "server_port": 5000,
+    "record_dir": "records/",
+    "tts_dir":"tts"
+    },
+    "tts":
+    {
+    "voice": "tr-TR-AhmetNeural",
+    "rate": "+20%",
+    "pitch":"+80Hz"
+    },
+    "ai":{
+        "model":"gemini-2.5-flash",
+        "prompt":"Sen R2-D2'sun.Kısa ve robotik cevap ver.Türkçe konuş. Soru:"
+    }
+}
