@@ -40,6 +40,30 @@ R2-D2's outer case and inner chassis were designed from scratch, fully optimized
 *   **Display:** I2C OLED Display
 *   **Sensors:** Capacitive Touch Sensor (For wake-up)
 
+## 🛠️ Hardware Components
+
+The following table highlights the core electronic components used to bring R2-D2 to life. These are organized into a grid for clear visualization.
+
+| Component | Description | Component | Description |
+| :---: | :--- | :---: | :--- |
+| <img src="hardware/images/esp32-s3-n16r8.jpg" width="250" alt="ESP32 Development Board"> | **ESP32 DevKit V1:** The brain of the project. Manages WiFi, I2S audio streaming, and OLED animations. | <img src="hardware/images/inmp441.jpg" width="250" alt="INMP441 Microphone"> | **INMP441 Microphone:** High-performance I2S MEMS microphone for clear voice capture. |
+| <img src="hardware/images/max98357.jpg" width="250" alt="MAX98357A Amplifier"> | **MAX98357A Amp:** I2S Class D amplifier that converts digital audio data into sound. | <img src="hardware/images/oled.jpg" width="250" alt="OLED Display"> | **OLED Display (SSD1306):** Displays real-time facial expressions and system status. |
+| <img src="hardware/images/TTP223.jpeg" width="250" alt="Touch Sensor"> | **Capacitive Touch Sensor:** Acts as the wake-up trigger to start the listening process. | <img src="hardware/images/speaker.jpg" width="250" alt="Speaker"> | **3W Speaker:** Delivers the character-specific voice responses and system sounds. |
+| <img src="hardware/images/images.jpeg" width="250" alt="TP4056 Charge Module"> | **TP4056 Module:** Lithium battery charger with protection circuit to safely charge the 18650 cell. | <img src="hardware/images/mt3608.jpg" width="250" alt="MT3608 Boost Converter"> | **MT3608 Boost Converter:** Steps up the battery voltage to a stable 5V for the ESP32 and peripherals. |
+| <img src="hardware/images/18650.jpg" width="250" alt="18650 Li-ion Battery"> | **18650 Battery:** High-capacity rechargeable Li-ion cell providing the main power source for the robot. | | |
+
+---
+
+## 📐 System Connection Diagram
+
+The diagram below illustrates the wiring between the ESP32 and its peripherals, as well as the logical flow between the Edge (ESP32) and the Cloud (Flask Server).
+
+<p align="center">
+  <img src="hardware/images/diagram.png" alt="System Connection and Architecture Diagram" width="800">
+</p>
+
+---
+
 ## 📁 Project Structure
 ```text
 ├── server/
