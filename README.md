@@ -5,89 +5,96 @@
 [![C++](https://img.shields.io/badge/C++-ESP32-00599C?logo=c%2B%2B)](https://isocpp.org/)
 [![Python](https://img.shields.io/badge/Python-Flask-3776AB?logo=python)](https://www.python.org/)
 
-Bu proje, ikonik R2-D2 karakterinin 3 boyutlu yazıcı ile üretilmiş özel tasarımıyla, yapay zeka tabanlı gerçek zamanlı bir sesli asistanı bir araya getiren uçtan uca (end-to-end) bir robotik projesidir. Sistem, uç cihazda (ESP32) donanım ve sensör yönetimini sağlarken, ağır işlem gücü gerektiren yapay zeka yükünü yerel bir Python sunucusuna devreder.
+This project is an end-to-end robotics project that combines a custom 3D-printed design of the iconic R2-D2 character with a real-time, AI-based voice assistant. While the system handles hardware and sensor management on the edge device (ESP32), it offloads the AI workload—which requires heavy processing power—to a local Python server.
 
-## 🌟 Öne Çıkan Özellikler
+## 🌟 Highlighted Features
 
-*   **Gerçek Zamanlı İletişim (Edge-to-Cloud):** ESP32 üzerinden I2S protokolüyle mikrofondan alınan RAW PCM ses verisinin HTTP üzerinden yerel sunucuya aktarımı.
-*   **Speech-to-Text (STT):** OpenAI Whisper (Turbo) modeli ile yüksek doğruluklu Türkçe ses tanıma.
-*   **Yapay Zeka (LLM):** Google Gemini API entegrasyonu ile bağlama duyarlı, R2-D2 karakterine uygun sohbet ve yanıt üretimi.
-*   **Text-to-Speech (TTS):** Edge-TTS altyapısı ile akıcı ve doğal ses sentezi.
-*   **Dinamik UI:** `RobotFace` kütüphanesi kullanılarak OLED ekran üzerinde durum tabanlı (Dinliyor, Düşünüyor, Konuşuyor vb.) dinamik yüz animasyonları.
-*   **Kablosuz Yönetim:** WiFiManager ile ağ yapılandırması ve ArduinoOTA ile uzaktan kablosuz kod güncelleme desteği.
+*   **Real-Time Communication (Edge-to-Cloud):** Transmission of RAW PCM audio data received from the microphone via I2S protocol on the ESP32 to the local server over HTTP.
+*   **Speech-to-Text (STT):** High-accuracy voice recognition using the OpenAI Whisper (Turbo) model.
+*   **Artificial Intelligence (LLM):** Context-aware conversational response generation fitting the R2-D2 character, integrated with the Google Gemini API.
+*   **Text-to-Speech (TTS):** Fluent and natural voice synthesis using the Edge-TTS infrastructure.
+*   **Dynamic UI:** State-based (Listening, Thinking, Speaking, etc.) dynamic facial animations on an OLED display using the `RobotFace` library.
+*   **Wireless Management:** Network configuration with WiFiManager and remote over-the-air code update support with ArduinoOTA.
 
-## 🏗️ Sistem Mimarisi
+## 🏗️ System Architecture
 
-Sistem **Uç (Edge)** ve **Sunucu (Server)** olmak üzere iki asenkron birimden oluşur:
+The system consists of two asynchronous units: **Edge** and **Server**:
 
-1.  **ESP32 (Uç Cihaz):** Dokunmatik sensör ile uyandırılır. I2S mikrofondan sesi kaydeder, RAW PCM formatında sunucuya iletir. Animasyonları yönetir ve sunucudan gelen yanıtı I2S amplifikatörü üzerinden çalar.
-2.  **Flask Sunucusu (Python):** 
-    *   `FFmpeg` ile sesi işlenebilir WAV formatına getirir.
-    *   `Whisper` ile sesi metne dönüştürür.
-    *   `Gemini LLM` ile metni analiz eder ve yanıt üretir.
-    *   `Edge-TTS` ile yanıtı sese çevirip, tekrar RAW PCM'e dönüştürerek cihaza geri gönderir.
+1.  **ESP32 (Edge Device):** Woken up by a touch sensor. It records audio from the I2S microphone and transmits it to the server in RAW PCM format. It manages the animations and plays the response received from the server through the I2S amplifier.
+2.  **Flask Server (Python):** 
+    *   Converts the audio to a processable WAV format using `FFmpeg`.
+    *   Converts speech to text using `Whisper`.
+    *   Analyzes the text and generates a response using `Gemini LLM`.
+    *   Converts the response to speech using `Edge-TTS`, converts it back to RAW PCM, and sends it back to the device.
 
-## 🛠️ Donanım ve 3B Tasarım
+## 🛠️ Hardware and 3D Design
 
-R2-D2'nin dış kasası ve iç şasesi tamamen 3B yazıcılar için optimize edilerek sıfırdan tasarlanmıştır.
+R2-D2's outer case and inner chassis were designed from scratch, fully optimized for 3D printers.
 
-👉 **[3B Model ve STL Dosyaları (Thingiverse) - Çok Yakında!]**
+👉 **[3D Model and STL Files (Thingiverse)](https://www.thingiverse.com/thing:7346557)**
 
-**Kullanılan Temel Elektronik Bileşenler:**
-*   **Mikrodenetleyici:** ESP32 Development Board
-*   **Mikrofon:** INMP441 (I2S MEMS)
-*   **Ses Çıkışı:** MAX98357A (I2S Class D Amplifier) + Hoparlör
-*   **Ekran:** I2C OLED Ekran
-*   **Sensörler:** Kapasitif Dokunmatik Sensör (Uyandırma için)
+**Main Electronic Components Used:**
+*   **Microcontroller:** ESP32 Development Board
+*   **Microphone:** INMP441 (I2S MEMS)
+*   **Audio Output:** MAX98357A (I2S Class D Amplifier) + Speaker
+*   **Display:** I2C OLED Display
+*   **Sensors:** Capacitive Touch Sensor (For wake-up)
 
-## 📁 Proje Yapısı
-
+## 📁 Project Structure
 ```text
 ├── server/
-│   ├── app.py                 # Flask sunucu ana uygulaması
+│   ├── app.py                 # Main Flask server application
 │   ├── config/
-│   │   └── settings.json      # API, TTS ve Sunucu ayarları
-│   └── requirements.txt       # Python bağımlılıkları
+│   │   └── settings.json      # API, TTS, and Server settings
+│   └── requirements.txt       # Python dependencies
 ├── esp32/
-│   ├── main.ino               # ESP32 ana kaynak kodu
-│   ├── RobotFace.h            # OLED animasyon kütüphanesi
-│   └── r2d2_ses.h             # PROGMEM üzerindeki sistem sesleri
+│   ├── main.ino               # Main ESP32 source code
+│   ├── RobotFace.h            # OLED animation library
+│   └── r2d2_ses.h             # System sounds on PROGMEM
 ├── .gitignore
 └── README.md
 ```
 
-## 🚀 Kurulum ve Kullanım
+## 🚀 Setup and Usage
 
-### 1. Sunucu (Python Backend) Kurulumu
-Projenin çalışması için bilgisayarınızda **FFmpeg** kurulu olmalı ve sistem PATH'ine eklenmiş olmalıdır.
+### 1. Server (Python Backend) Setup
+For the project to work, **FFmpeg** must be installed on your computer and added to your system's PATH.
 
-1. Depoyu bilgisayarınıza indirin ve klasöre girin:
-git clone [https://github.com/CinarSamet/Smart-R2-D2-Assistant.git](https://github.com/CinarSamet/Smart-R2-D2-Assistant.git)
-cd Smart-R2-D2-Assistant/server
+1. Clone the repository to your computer and enter the directory:
+   ```bash
+   git clone [https://github.com/CinarSamet/Smart-R2-D2-Assistant.git](https://github.com/CinarSamet/Smart-R2-D2-Assistant.git)
+   cd Smart-R2-D2-Assistant/server
+   ```
 
-2. Gerekli Python kütüphanelerini yükleyin:
-pip install -r requirements.txt
+2. Install the required Python libraries:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Çevresel değişken olarak Gemini API anahtarınızı ekleyin:
-export GEMINI_API_KEY="sizin_api_anahtariniz"
+3. Add your Gemini API key as an environment variable:
+   ```bash
+   export GEMINI_API_KEY="your_api_key"
+   ```
 
-4. Sunucuyu başlatın:
-python app.py
+4. Start the server:
+   ```bash
+   python app.py
+   ```
 
-### 2. Donanım (ESP32) Kurulumu
-1. Arduino IDE'yi açın ve gerekli kütüphaneleri (`WiFiManager`, `ArduinoOTA` vb.) yükleyin.
-2. `esp32/main.ino` dosyasındaki `serverUrl` değişkenini sunucunun çalıştığı bilgisayarın yerel IP adresiyle güncelleyin (Örn: `[http://192.168.1.](http://192.168.1.)X:5001/upload`).
-3. Kodu ESP32'ye yükleyin. 
-4. Cihaz ilk açılışta `R2D2_Kurulum` adında bir Wi-Fi ağı oluşturacaktır. Bu ağa bağlanarak yerel internet bilgilerinizi cihaza tanımlayın.
+### 2. Hardware (ESP32) Setup
+1. Open the Arduino IDE and install the necessary libraries (`WiFiManager`, `ArduinoOTA`, etc.).
+2. Update the `serverUrl` variable in the `esp32/main.ino` file with the local IP address of the computer running the server (e.g., `http://192.168.1.X:5001/upload`).
+3. Upload the code to the ESP32. 
+4. On its first boot, the device will create a Wi-Fi network named `R2D2_Kurulum`. Connect to this network to configure your local internet settings on the device.
 
-## 🗺️ Yol Haritası (Roadmap)
-- [x] I2S ses boru hattının ESP32 üzerinde kurulması.
-- [x] Whisper, Gemini ve TTS entegrasyonu ile kapalı döngü iletişimin sağlanması.
-- [x] Donanım State Machine yapısının ve OLED arayüzün oluşturulması.
-- [ ] **Dockerization:** Tüm Flask/AI sunucu altyapısının Docker container'ları içine alınarak ortam bağımsız deploy edilebilir hale getirilmesi.
-- [ ] **Sensör Füzyonu:** IMU verilerinin ve mesafe sensörlerinin entegre edilerek otonom hareket kabiliyeti eklenmesi.
+## 🗺️ Roadmap
+- [x] Establishing the I2S audio pipeline on the ESP32.
+- [x] Ensuring closed-loop communication with Whisper, Gemini, and TTS integration.
+- [x] Creating the hardware State Machine structure and OLED interface.
+- [ ] **Dockerization:** Containerizing the entire Flask/AI server infrastructure using Docker to make it environment-independent and deployable.
+- [ ] **Sensor Fusion:** Adding autonomous movement capabilities by integrating IMU data and distance sensors.
 
-## 📄 Lisans
-Bu depodaki yazılım kodları (ESP32 ve Python) **MIT License** altında lisanslanmıştır. Daha fazla detay için `LICENSE` dosyasına bakabilirsiniz.
+## 📄 License
+The software codes in this repository (ESP32 and Python) are licensed under the **MIT License**. See the `LICENSE` file for more details.
 
-Projenin 3B donanım tasarımları (STL dosyaları) **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** lisansına tabidir. Ticari amaçlarla çoğaltılması ve satılması yasaktır. Kişisel projelerinizde özgürce kullanabilir ve geliştirebilirsiniz.
+The 3D hardware designs (STL files) of the project are subject to the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license. Reproduction and sale for commercial purposes are prohibited. You are free to use and develop them in your personal projects.
